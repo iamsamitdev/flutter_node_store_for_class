@@ -1,0 +1,16 @@
+{
+    "hello": "Hello, How are you ?",
+    "menu_home": "Home",
+    "menu_about": "About",
+    "menu_contact": "Contact",
+    "menu_report": "Report",
+    "menu_notification": "Notification",
+    "menu_info": "Info",
+    "menu_account": "Account",
+    "menu_changepass": "Change Password",
+    "menu_changelang": "Change Language",
+    "menu_setting": "Setting",
+    "menu_profile": "Profile",
+    "menu_logout": "Logout",
+    "label_chooselang": "Choose Language"
+}

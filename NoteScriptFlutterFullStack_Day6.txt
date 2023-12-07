@@ -1,0 +1,1773 @@
+================================
+🛴🛴 Flutter 3 Full Stack Workshop  🛴🛴
+================================
+✈ DAY 1
+1.การเตรียมเครื่องมือและความพร้อม
+2.การใช้งานฐานข้อมูล MySQL ผ่าน API
+3.การอัพโหลดไฟล์ภาพผ่าน API (Node JS)
+-------------------------------------------------------
+🛠1. การเตรียมเครื่องมือและความพร้อม
+💻 Java
+---
+java -version
+where java
+set JAVA_HOME
+
+💻 Android SK
+---
+android
+where android
+
+💻 Node JS
+---
+node -v
+npm -v
+npx -v
+where node
+
+💻 Git
+---
+git version
+where git
+
+💻 Flutter SDK
+---
+flutter --version
+flutter doctor
+where flutter
+
+🚀เริ่มต้นสร้างโปรเจ็กต์ใหม่ใน Flutter
+---
+Step 1: สร้างโฟลเดอร์ใหม่ในเครื่องสำหรับเก็บโปรเจ็กต์ในคอร์สอบรมนี้
+----
+mkdir Flutter3FullStack
+
+Step 2: คำสั่งสร้างโปรเจ็กต์ใหม่ในโฟลเดอร์ที่สร้าง
+----
+flutter create --org  com.itgenius flutter_node_store
+
+Step 2: เปิดเข้าใน VSCode
+---
+code flutter_node_store -r
+
+Step 3: รันโปรเจ็กต์
+
+🔌 2.การใช้งานฐานข้อมูล MySQL ผ่าน API
+
+Step 1: สร้างฐานข้อมูลใหม่ชื่อ “flutterstore”
+---
+CREATE DATABASE flutterstore
+    DEFAULT CHARACTER SET = 'utf8mb4';
+
+Step 2: Clone Project from and Install node dependencies
+---
+git clone https://github.com/iamsamitdev/serverapi_ts serverapi
+
+Step 3: เปลี่ยนชื่อ .env_example เป็น .env และกำหนดค่าดังนี้
+---
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASSWORD=123456
+DB_PORT=3306
+DB_DATABASE=flutterstore
+ENV=development
+PORT=3000
+JWT_SECRET=itgenius@2023secret
+
+Step 4: รันคำสั่งติดตั้ง Library
+---
+npm install
+
+Step 5: รันคำสั่ง migrate ฐานข้อมูล 
+---
+npx knex migrate:latest
+npm run knex:migrate:latest
+
+Step 6: รันคำสั่ง seed ฐานข้อมูล
+---
+npx knex seed:run
+
+Step 7: รันโปรเจ็กต์ Node.JS Express
+---
+npm start
+
+Step 8: ทดสอบ API Register
+---
+http://localhost:3000/api/auth/register
+
+Method : Post
+Body: Json
+{
+  "firstname":"Samit",
+  "lastname":"Koyom",
+  "email":"samit@email.com",
+  "password":"123456"
+}
+
+Step 9: ทดสอบ API Login
+---
+http://localhost:3000/api/auth/login
+
+Body: Json
+{
+  "email":"samit@email.com",
+  "password":"123456"
+}
+
+Step 10: ทดสอบ API List Products
+---
+http://localhost:3000/api/products
+Method: Get
+Auth: Bearer Token
+
+Step 11: ทดสอบ API List Products by id
+---
+http://localhost:3000/api/products/3
+Method: Get
+Auth: Bearer Token
+
+🔌 3.การอัพโหลดไฟล์ภาพผ่าน API (Node JS)
+
+Step 12: ทดสอบ API Create Product
+---
+http://localhost:3000/api/products
+
+Method : Post
+Auth: Bearer Token
+Body: Form
+
+Field name	value
+----------------------------------------------------
+name		test some product
+description	lorem ipsonefa
+barcode		845964464485
+stock		10
+price		29500
+category_id	1
+user_id		1
+status_id		1
+
+Files
+---------------------------------------------------
+photo		example.jpg
+
+Step 13: ทดสอบ API Edit Product
+---
+http://localhost:3000/api/products/18
+
+Method : Put
+Auth: Bearer Token
+Body: Json
+{
+  "name":"test some product update",
+  "description":"lorem ipsonefa update",
+  "barcode":"845964464485",
+  "stock":11,
+  "price":39500,
+  "category_id":1,
+  "user_id":1,
+  "status_id":1
+}
+
+Step 14: ทดสอบ API Delete Product
+---
+http://localhost:3000/api/products/18
+
+Method : Delete
+Auth: Bearer Token
+
+-------------------------------------------------------
+✈ DAY 2
+-------------------------------------------------------
+4: เข้าใจการทำงานกับ State พื้นฐานใน Flutter
+5: Flutter Layout ที่สำคัญสำหรับผู้เริ่มต้น
+6: โครงสร้างโปรเจ็กต์รองรับงานขนาดใหญ่ขึ้น
+7: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API
+-------------------------------------------------------
+🔮 4. เข้าใจการทำงานกับ State พื้นฐานใน Flutter
+🔮 5: Flutter Layout ที่สำคัญสำหรับผู้เริ่มต้น
+🔮 6: โครงสร้างโปรเจ็กต์รองรับงานขนาดใหญ่ขึ้น
+
+ตัวอย่างโครงสร้างโปรเจ็กต์ในตอนนี้
+Flutter_Node_Store
+==================
++---android
++---assets
+|   +---fonts
+|   \---images
++---build
++---functions
++---ios
++---lib
+|   +---components
+|   |   +---mobile_layout.dart
+|   |   +---responsive_layout.dart
+|   |   +---rounded_button.dart
+|   |   +---social_media_option.dart
+|   |   \---web_layout.dart
+|   +---models
+|   +---screens
+|   |   +---login
+|   |   |   +---login_form.dart
+|   |   |   \---login_screen.dart
+|   |   \---welcome
+|   |   |   \---welcome_screen.dart
+|   +---services
+|   +---themes
+|   |   +---colors.dart
+|   |   +---styles.dart
+|   |   \---text.dart
+|   \---utils
++---app_router.dart
++---main.dart
++---linux
++---macos
++---serverapi
++---test
++---web
++---.gitignore
++---.metadata
++---analysis_options.yaml
++---pubspect.yaml
++---README.md
+
+-------------------------------------------------------
+✈ DAY 3
+-------------------------------------------------------
+Section 7: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API
+Section 8: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API (ต่อ)
+Section 9: จัดการ State ด้วย Provider
+-------------------------------------------------------
+Section 7: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API
+
+Flutter_Node_Store
+==================
++---android
++---assets
+|   +---fonts
+|   \---images
++---build
++---functions
++---ios
++---lib
+|   +---components
+|   |   +---custom_textfield.dart
+|   |   +---mobile_layout.dart
+|   |   +---responsive_layout.dart
+|   |   +---rounded_button.dart
+|   |   +---social_media_option.dart
+|   |   \---web_layout.dart
+|   +---models
+|   +---screens
+|   |   +---forgotpassword
+|   |   |   +---forgot_password_form.dart
+|   |   |   \----forgot_password_screen.dart
+|   |   +---login
+|   |   |   +---login_form.dart
+|   |   |   \---login_screen.dart
+|   |   +---register
+|   |   |   +---register_form.dart
+|   |   |   \---register_screen.dart
+|   |   \---welcome
+|   |   |   \---welcome_screen.dart
+|   +---services
+|   +---themes
+|   |   +---colors.dart
+|   |   +---styles.dart
+|   |   \---text.dart
+|   \---utils
+|   |   |   +---constants.dart
++---app_router.dart
++---main.dart
++---linux
++---macos
++---serverapi
++---test
++---web
++---.gitignore
++---.metadata
++---analysis_options.yaml
++---pubspect.yaml
++---README.md
+
+Step 1: มาฝึกสร้าง Custom Widget สำหรับ TextField
+---
+สร้างไฟล์ custom_textfield.dart ใน lib/components
+---
+import 'package:flutter/material.dart';
+
+// CustomTextField คือ Widget ที่เราสร้างขึ้นมาเอง
+Widget customTextField({
+  required TextEditingController controller,
+  required String hintText,
+  required Icon prefixIcon,
+  required bool obscureText,
+  required String? Function(String?)? validator,
+}) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: TextInputType.emailAddress,
+    autofocus: false,
+    enableSuggestions: false,
+    autocorrect: false,
+    obscureText: obscureText,
+    decoration: InputDecoration(
+      hintText: hintText,
+      prefixIcon: prefixIcon,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(40),
+        borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+      ),
+      filled: true,
+      isDense: true,
+      contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+      fillColor: Colors.grey[300],
+    ),
+    validator: validator,
+  );
+}
+
+Step 2: สร้างฟอร์มลงทะเบียน (register)
+---
+|   |   +---register
+|   |   |   +---register_form.dart
+|   |   |   \----register_screen.dart
+
+Step 3: สร้างหน้าลืมรหัสผ่าน (forgotpass)
+---
+|   |   +---forgotpassword
+|   |   |   +---forgot_password_form.dart
+|   |   |   \----forgot_password_screen.dart
+
+Step 4: การเก็บข้อมูลลง Storage ของเครื่อง
+---
+ติดตั้ง library "shared_preferences"
+  # Shared Preferences
+  shared_preferences: ^2.2.0
+
+Step 5: Set ค่าให้กับ SharedPreferences เพื่อบอกว่าเคยแสดง Intro แล้ว
+แก้ไขไฟล์ welcome_screen.dart
+---
+void _onIntroEnd(context) async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('welcomeStatus', true);
+
+    // ไปยังหน้า Login
+    Navigator.pushReplacementNamed(context, AppRouter.login);
+  }
+
+Step 6: กำหนด initialRoute ให้กับ app ที่ไฟล์  main.dart
+---
+var initialRoute;
+
+...
+void main() async {
+
+  // ต้องเรียกใช้ WidgetsFlutterBinding.ensureInitialized()
+  // เพื่อให้สามารถเรียกใช้ SharedPreferences ได้
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // สร้างตัวแปร prefs ไว้เก็บค่า SharedPreferences
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  // ตรวจสอบว่าเคยแสดง Intro แล้วหรือยัง 
+  if (prefs.getBool('welcomeStatus') == true) {
+    initialRoute = AppRouter.login;
+  } else {
+    initialRoute = AppRouter.welcome;
+  }
+
+  runApp(const MyApp());
+}
+
+...
+@override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Node Store App',
+      theme: AppTheme.lightTheme,
+      initialRoute: initialRoute,
+      routes: AppRouter.routes,
+    );
+  }
+
+
+Step 7: ติดตั้ง lib ที่จำเป็นสำหรับทำงานกับ API
+---
+  # logger for debugging
+  logger: ^2.0.2+1 
+
+  # Network connectivity
+  connectivity_plus: ^4.0.1
+
+  # dio
+  dio: ^5.3.0
+
+Step 8: สร้างไฟล์ constants.dart ไว้กำหนด baseURLAPI ที่ lib/uitls
+---
+|   \---utils
+|   |   |   +---constants.dart
+
+กำหนด path ดังนี้
+---
+// API URL
+// Local
+const baseURLAPI = 'http://192.168.1.44:3000/api/';
+const baseURLImage = 'http://192.168.1.44:3000/uploads/images/';
+
+// Server
+// const baseURLAPI = 'https://serverapi-node.onrender.com/api/';
+// const baseURLImage = 'https://serverapi-node.onrender.com/uploads/images/';
+
+Step 9: สร้างไฟล์ utility.dart สำหรับกำหนดการตรวจสอบ network ที่ lib/uitls
+---
+|   \---utils
+|   |   |   +---constants.dart
+|   |   |   +---utility.dart
+
+กำหนดโค้ดดังนี้
+---
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+class Utility {
+
+  // Check Network Connection
+  static Future<String> checkNetwork() async {
+    
+    var checkNetwork = await Connectivity().checkConnectivity();
+
+    if(checkNetwork == ConnectivityResult.none){
+      return '';
+    } else if(checkNetwork == ConnectivityResult.mobile){
+      return 'mobile';
+    } else if(checkNetwork == ConnectivityResult.wifi){
+      return 'wifi';
+    }
+    
+    return '';
+
+  }
+
+}
+
+Step 10: สร้างไฟล์ dio_config.dart เพื่อกำหนดค่า config ให้ Dio ที่ lib/services
+---
+import 'package:dio/dio.dart';
+import 'package:flutter_node_store/main.dart';
+import 'package:flutter_node_store/utils/constants.dart';
+
+class DioConfig {
+
+  static final Dio _dio = Dio()
+  ..interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        options.headers['Accept'] = 'application/json';
+        options.headers['Content-Type'] = 'application/json';
+        options.baseUrl = baseURLAPI;
+        return handler.next(options);
+      },
+      onResponse: (response, handler) async {
+        return handler.next(response);
+      },
+      onError: (DioException e, handler) {
+        switch(e.response?.statusCode){
+          case 400:
+            logger.e('Bad Request');
+            break;
+          case 401:
+            logger.e('Unauthorized');
+            break;
+          case 403:
+            logger.e('Forbidden');
+            break;
+          case 404:
+            logger.e('Not Found');
+            break;
+          case 500:
+            logger.e('Internal Server Error');
+            break;
+          default:
+            logger.e('Something went wrong');
+            break;
+        }
+        return handler.next(e);
+      }
+    )
+  );
+
+  static Dio get dio => _dio;
+}
+
+Step 11: เขียน rest_api.dart สำหรับการ login/register ที่ lib/services
+---
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:flutter_node_store/main.dart';
+import 'package:flutter_node_store/services/dio_config.dart';
+
+class CallAPI {
+
+  // Create Dio Instance
+  final Dio _dio = DioConfig.dio;
+
+  // Register API
+  registerAPI(data) async {
+    try {
+      final response = await _dio.post('auth/register', data: data);
+      logger.d(response.data);
+      return jsonEncode(response.data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Login API
+  loginAPI(data) async {
+    try {
+      final response = await _dio.post('auth/login', data: data);
+      logger.d(response.data);
+      return jsonEncode(response.data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+}
+
+Step 12: เขียนส่วนการ register เชื่อมกับ webapi ที่ไฟล์ lib/screens/register/register_form.dart
+---
+RoundedButton(
+                  label: "SIGN UP",
+                  onPressed: () async {
+                    // ตรวจสอบข้อมูลฟอร์ม
+                    if (_formKeyRegister.currentState!.validate()) {
+                      // ถ้าข้อมูลถูกต้อง ให้ทำการบันทึกข้อมูล
+                      _formKeyRegister.currentState!.save();
+
+                      // เรียกใข้งาน API Register
+                      var response = await CallAPI().registerAPI({
+                        "firstname": _firstNameController.text,
+                        "lastname": _lastNameController.text,
+                        "email": _emailController.text,
+                        "password": _passwordController.text
+                      });
+
+                      var body = jsonDecode(response);
+
+                      logger.i(body);
+
+                      if (body['message'] == 'No Network Connection') {
+                        // แจ้งเตือนว่าไม่มีการเชื่อมต่อ Internet
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            key: const Key('no_network_register'),
+                            content: Center(
+                              child: const Text('ไม่มีการเชื่อมต่อ Internet'),
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } else {
+                        if (body['status'] == 'ok') {
+                          // แจ้งว่าลงทะเบียนสำเร็จ
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              key: const Key('register_success'),
+                              content: Center(
+                                child: Text(body['message']),
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          // ส่งไปหน้า Login
+                          Navigator.pushReplacementNamed(
+                              context, AppRouter.login);
+                        } else {
+                          // แสดงข้อความ Error
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              key: const Key('register_error'),
+                              content: Center(
+                                child: Text(body['message']),
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    }
+                  },
+                ),
+
+-------------------------------------------------------
+✈ DAY 4
+-------------------------------------------------------
+Section 8: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API (ต่อ)
+Section 9: จัดการ State ด้วย Provider
+Section 10: การทำแอพให้รองรับหลายภาษา
+Section 11: จัดการ State และ Route ด้วย GetX
+-------------------------------------------------------
+Section 8: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API (ต่อ)
+
+Step 1: ย้าย logger จาก main.dart ไปเก็บไว้ที่ไฟล์ utility.dart
+---
+class Utility {
+
+  // Logger
+  final logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 1,
+      colors: true,
+      printEmojis: true,
+      printTime: false,
+    )
+  );
+
+  // Test Logger
+  void testLogger() {
+    logger.t('Verbose log');
+    logger.d('Debug log');
+    logger.i('Info log');
+    logger.w('Warning log');
+    logger.e('Error log');
+    logger.f('What a terrible failure log');
+  }
+
+.
+.
+.
+}
+
+Step 2: ทดสอบเรียก logger ที่ไฟล์ main.dart
+---
+import 'package:flutter_node_store/utils/utility.dart';
+
+void main() async {
+   Utility().testLogger();
+}
+
+Step 3: แก้ไขการเรียกใช้ logger ที่ไฟล์ dio_config.dart, rest_api.dart และ register_form.dart
+---
+Utility().logger.e('Bad Request');
+..
+Utility().logger.d(response.data);
+..
+Utility().logger.i(body);
+
+Step 4: แก้ไข Alert Dialog ในไฟล์ utility.dart
+---
+class Utility {
+.
+.
+.
+
+// Alert Dialog
+  static showAlertDialog(context, title, content) {
+    AlertDialog buildAlertDialog(Color backgroundColor, IconData icon) {
+      return AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(15.0),
+          ),
+        ),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            CircleAvatar(
+              backgroundColor: backgroundColor,
+              radius: 35,
+              child: Icon(
+                icon,
+                size: 40,
+                color: Colors.white,
+              ),
+            ),
+            Text(content),
+          ],
+        ),
+        actions: [
+          Center(
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('ตกลง'),
+            ),
+          ),
+        ],
+      );
+    }
+    switch (title) {
+      case "ok":
+        return showDialog(
+          context: context,
+          builder: (BuildContext context) => FractionallySizedBox(heightFactor: 0.4, child: buildAlertDialog(Colors.green[700]!, Icons.check)),
+        );
+      case "error":
+        return showDialog(
+          context: context,
+          builder: (BuildContext context) => FractionallySizedBox(heightFactor: 0.4, child: buildAlertDialog(Colors.red[700]!, Icons.close)),
+        );
+      default:
+        return showDialog(
+          context: context,
+          builder: (BuildContext context) => FractionallySizedBox(heightFactor: 0.4, child: buildAlertDialog(Colors.blue[700]!, Icons.info_outline)),
+        );
+    }
+  }
+
+}
+
+Step 5: แก้ไขไฟล์ responsive_layout.dart
+เพื่อซ่อน keyboard เมื่อกดพื้นที่อื่นนอกฟอร์ม
+---
+return Scaffold(
+body: GestureDetector(
+onTap: () {
+          // ปิดคีย์บอร์ดเมื่อกดที่พื้นที่อื่น
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+.
+.
+)
+}
+
+Step 6: อัพเดท login api ในไฟล์ lib/services/rest_api.dart
+---
+  // Login API
+  loginAPI(data) async {
+    // Check Network Connection
+    if(await Utility.checkNetwork() == ''){
+      return jsonEncode(
+        {'message': 'No Network Connection'}
+      );
+    }else{
+      try {
+        final response = await _dio.post('auth/login', data: data);
+        logger.d(response.data);
+        return jsonEncode(response.data);
+      } catch (e) {
+        logger.e(e);
+      }
+    }
+  }
+
+Step 7: อัพเดทไฟล์ login_form.dart
+---
+RoundedButton(
+                    label: "LOGIN",
+                    onPressed: () async {
+                      // ตรวจสอบข้อมูลฟอร์ม
+                      if (_formKeyLogin.currentState!.validate()) {
+                        // ถ้าข้อมูลผ่านการตรวจสอบ ให้ทำการบันทึกข้อมูล
+                        _formKeyLogin.currentState!.save();
+
+                        // ส่งข้อมูลไปยัง API เพื่อทำการตรวจสอบ
+                        var response = await CallAPI().loginAPI(
+                          {
+                            "email": _emailController.text,
+                            "password": _passwordController.text
+                          }
+                        );
+
+                        // ตรวจสอบค่าที่ได้จาก API
+                        var body = jsonDecode(response);
+
+                        Utility().logger.i(body);
+
+                        if (body["message"] == "No Network Connection") {
+                          // แจ้งเตือนว่าไม่มีการเชื่อมต่อ Internet
+                            Utility.showAlertDialog(context, '', '${body["message"]}');
+                        } else {
+                          if (body["status"] == "ok") {
+                            // แจ้งเตือนว่าเข้าสู่ระบบสำเร็จ
+                            Utility.showAlertDialog(context, body["status"], '${body["message"]}');
+                          } else {
+                            // แจ้งเตือนว่าเข้าสู่ระบบไม่สำเร็จ
+                            Utility.showAlertDialog(context, body["status"], '${body["message"]}');
+                          }
+                        }
+
+                      }
+  })
+
+Step 8: อัพเดทไฟล์ utility.dart เก็บส่วนการสร้าง SharedPreference ไว้ที่นี่
+---
+class Utility {
+.
+.
+
+// Shared Preferences ==============
+  static SharedPreferences? _preferences;
+  static Future initSharedPrefs() async => _preferences = await SharedPreferences.getInstance();
+
+  // Get Shared Preferences
+  static dynamic getSharedPreference(String key) {
+    if(_preferences == null) return null;
+    return _preferences!.get(key);
+  }
+
+  // Set Shared Preferences
+  static Future<bool> setSharedPreference(String key, dynamic value) async {
+    if(_preferences == null) return false;
+    if(value is String) return await _preferences!.setString(key, value);
+    if(value is int) return await _preferences!.setInt(key, value);
+    if(value is bool) return await _preferences!.setBool(key, value);
+    if(value is double) return await _preferences!.setDouble(key, value);
+    return false;
+  }
+
+  // Remove Shared Preferences
+  static Future<bool> removeSharedPreference(String key) async {
+    if(_preferences == null) return false;
+    return await _preferences!.remove(key);
+  }
+
+  // Clear Shared Preferences
+  static Future<bool> clearSharedPreference() async {
+    if(_preferences == null) return false;
+    return await _preferences!.clear();
+  }
+
+  // Check Shared Preferences
+  static Future<bool> checkSharedPreference(String key) async {
+    if(_preferences == null) return false;
+    return await _preferences!.containsKey(key);
+  }
+
+  // ================================
+.
+.
+}
+
+Step 9: เรียกใช้ SharedPreference ที่หน้า main.dart
+---
+void main() async {
+.
+.
+// เรียกใช้ SharedPreferences
+  await Utility.initSharedPrefs();
+
+  // ตรวจสอบว่าเคยแสดง Intro แล้วหรือยัง 
+  if (Utility.getSharedPreference('welcomeStatus') == true) {
+    initialRoute = AppRouter.login;
+  } else {
+    initialRoute = AppRouter.welcome;
+  }
+.
+.
+}
+
+Step 10: เรียกใช้ SharedPreference ที่หน้า welcome_screen.dart
+---
+void _onIntroEnd(context) async {
+
+    // Set ค่าให้กับ SharedPreferences เพื่อบอกว่าเคยแสดง Intro แล้ว
+    await Utility.setSharedPreference('welcomeStatus', true);
+
+.
+.
+  } 
+
+Step 11: สร้างหน้า dashboard_screen.dart
+---
+import 'package:flutter/material.dart';
+
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+      ),
+      body: const Center(
+        child: Text('Dashboard Screen'),
+      )
+    );
+  }
+}
+
+Step 12: กำหนด router ที่ไฟล์ app_router.dart
+---
+class AppRouter {
+  
+  // Router Map Key
+...
+  static const String dashboard = 'dashboard';
+ 
+  // Router Map
+  static get routes => {
+   ...
+    dashboard: (context) => const DashboardScreen(),
+  };
+
+}
+
+Step 13: Set ค่าให้กับ SharedPreferences ในหน้า login_form เพื่อเช็คว่าผ่านการ login แล้ว
+---
+if (body["status"] == "ok") {
+
+ await Utility.setSharedPreference('loginStatus', true);
+                            await Utility.setSharedPreference('token', body["token"]);
+                            await Utility.setSharedPreference('user', body["user"]);
+
+                            // ส่งไปหน้า Dashboard
+                            Navigator.pushReplacementNamed(context, AppRouter.dashboard);
+
+}
+
+
+Step 14: กำหนดเงื่อนไขการแสดงหน้าแรก initialRoute ที่ไฟล์ main.dart
+---
+  if (Utility.getSharedPreference('loginStatus') == true) { // ตรวจสอบว่าเคย Login แล้วหรือยัง
+    initialRoute = AppRouter.dashboard;
+  } else if(Utility.getSharedPreference('welcomeStatus') == true) { // ตรวจสอบว่าเคยแสดง Intro แล้วหรือยัง 
+    initialRoute = AppRouter.login;
+  } else { // ถ้ายังไม่เคยแสดง Intro ให้แสดง Intro ก่อน
+    initialRoute = AppRouter.welcome;
+  }
+
+Step 15: สร้างหน้าในส่วนเมนูด้านข้าง (drawerpage) ไว้ในโฟลเดอร์ drawerpage
+---
+info_screen.dart
+about_screen.dart
+contact_screen.dart
+
+---
+import 'package:flutter/material.dart';
+
+class InfoScreen extends StatelessWidget {
+  const InfoScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Info'),
+      ),
+      body: const Center(
+        child: Text('Info Screen'),
+      )
+    );
+  }
+}
+
+Step 16: เพิ่มส่วน app_router.dart
+---
+class AppRouter {
+..
+  static const String info = 'info';
+  static const String about = 'about';
+  static const String contact = 'contact';
+
+static get routes => {
+    info: (context) => const InfoScreen(),
+    about: (context) => const AboutScreen(),
+    contact: (context) => const ContactScreen(),
+};
+..
+}
+
+Step 17: เพิ่มส่วน drawer ที่ไฟล์ dashboard_screen.dart
+---
+      drawer: Drawer(
+        // backgroundColor: primary,
+        child: Column(
+          children: [
+            ListView(
+              shrinkWrap: true,
+              children: [
+                UserAccountsDrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.teal,
+                  ),
+                  accountName: Text('Samit Koyom'),
+                  accountEmail: Text('samit@email.com'),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/noavartar.png'),
+                  ),
+                  otherAccountsPictures: [
+                    CircleAvatar(
+                      backgroundImage:
+                          AssetImage('assets/images/noavartar.png'),
+                    ),
+                  ],
+                ),
+                ListTile(
+                  leading: Icon(Icons.info_outline),
+                  title: Text('Info'),
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.info);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.person_outline),
+                  title: Text('About'),
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.about);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.email_outlined),
+                  title: Text('Contact'),
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRouter.contact);
+                  },
+                ),
+              ],
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.exit_to_app_outlined),
+                    title: Text('Logout'),
+                    onTap: _logout,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+
+
+Step 18: เพิ่มส่วนฟังก์ชัน _logout ที่ไฟล์ dashboard_screen.dart
+---
+  // Logout Function   // Logout Function -----------------------------------------------------------
+  _logout() {
+    // Remove token, loginStatus shared preference
+    Utility.removeSharedPreference('token');
+    Utility.removeSharedPreference('loginStatus');
+
+    // Clear All Route
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRouter.login,
+      (route) => false,
+    );
+  }
+  // ---------------------------------------------------------------------------
+
+Step 19: สร้างหน้าส่วน bottomnavpage
+---
+home_screen.dart
+report_screen.dart
+notification_screen.dart
+setting_screen.dart
+profile_screen.dart
+
+---
+import 'package:flutter/material.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Home Screen'),
+      ),
+    );
+  }
+}
+
+Step 20: ส่วนของการโหลดสลับข้อมูลใน bottomNavigationBar
+---
+// สร้างตัวแปรเก็บ title ของแต่ละหน้า
+  String _title = 'Flutter Store';
+
+  // สร้างตัวแปรเก็บ index ของแต่ละหน้า
+  int _currentIndex = 0;
+
+  // สร้าง List ของแต่ละหน้า
+  final List<Widget> _children = [
+    HomeScreen(),
+    ReportScreen(),
+    NotificationScreen(),
+    SettingScreen(),
+    ProfileScreen()
+  ];
+
+  // ฟังก์ขันในการเปลี่ยนหน้า โดยรับค่า index จากการกดที่ bottomNavigationBar
+  void onTabTapped(int index) {
+    setState(
+      () {
+        _currentIndex = index;
+        switch (index) {
+          case 0:
+            _title = 'Home';
+            break;
+          case 1:
+            _title = 'Report';
+            break;
+          case 2:
+            _title = 'Notification';
+            break;
+          case 3:
+            _title = 'Setting';
+            break;
+          case 4:
+            _title = 'Profile';
+            break;
+          default:
+            _title = 'Flutter Store';
+            break;
+        }
+      },
+    );
+  }
+
+Step 21: กำหนด bottom tab
+---
+appBar: AppBar(
+    title: Text(_title),
+),
+
+body: _children[_currentIndex],
+
+bottomNavigationBar: BottomNavigationBar(
+        onTap: (value) {
+          onTabTapped(value);
+        },
+        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: primaryDark,
+        unselectedItemColor: secondaryText,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart_outlined),
+            label: 'Report'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_outlined),
+            label: 'Notification'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            label: 'Setting'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile'
+          ),
+        ]
+      ),
+
+Step 22: Create GridView and ListView in home_screen.dart
+---
+
+// Toggle between ListView and GridView
+  bool _isGridView = true;
+
+  // สร้างฟังก์ชันสลับระหว่าง ListView และ GridView
+  void _toggleView(){
+    setState(() {
+      _isGridView = !_isGridView;
+    });
+  }
+
+ @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: _toggleView, 
+          icon: Icon(_isGridView ? Icons.list_outlined: Icons.grid_view)
+        ),
+        title: const Text('สินค้า'),
+        actions: [
+          IconButton(
+            onPressed: (){
+              // 
+            }, 
+            icon: const Icon(Icons.add)
+          )
+        ],
+      ),
+      body: _isGridView ? _gridView() : _listView(),
+    );
+  }
+
+// _gridView Widget -----------------------------------------------------------
+  Widget _gridView(){
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2 // จำนวนคอลัมน์
+      ), 
+      itemCount: 12,
+      itemBuilder: (context, index){
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(0, 1),
+                  blurRadius: 2,
+                )
+              ]
+            ),
+          ),
+        );
+      }
+    );
+  }
+  // ---------------------------------------------------------------------------
+
+// _listView Widget -----------------------------------------------------------
+  Widget _listView(){
+    return ListView.builder(
+      itemCount: 12,
+      itemBuilder: (context, index){
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+          child: SizedBox(
+            height: 350,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.grey,
+                    offset: Offset(0, 1),
+                    blurRadius: 2,
+                  )
+                ]
+              ),
+            ),
+          )
+        );
+      }
+    );
+  }
+  // ---------------------------------------------------------------------------
+
+Step 22: สร้าง model สำหรับเก็บข้อมูล api product ที่โฟลเดอร์ models/product_model.dart
+---
+import 'dart:convert';
+
+List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(json.decode(str).map((x) => ProductModel.fromJson(x)));
+
+String productModelToJson(List<ProductModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class ProductModel {
+    int? id;
+    String? name;
+    String? description;
+    String? barcode;
+    String? image;
+    int? stock;
+    int? price;
+    int? categoryId;
+    int? userId;
+    int? statusId;
+    DateTime? createdAt;
+    DateTime? updatedAt;
+
+    ProductModel({
+        this.id,
+        this.name,
+        this.description,
+        this.barcode,
+        this.image,
+        this.stock,
+        this.price,
+        this.categoryId,
+        this.userId,
+        this.statusId,
+        this.createdAt,
+        this.updatedAt,
+    });
+
+    factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        barcode: json["barcode"],
+        image: json["image"],
+        stock: json["stock"],
+        price: json["price"],
+        categoryId: json["category_id"],
+        userId: json["user_id"],
+        statusId: json["status_id"],
+        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "description": description,
+        "barcode": barcode,
+        "image": image,
+        "stock": stock,
+        "price": price,
+        "category_id": categoryId,
+        "user_id": userId,
+        "status_id": statusId,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+    };
+}
+
+Step 23: เพิ่ม Dio Instance with Auth ที่ไฟล์ dio_config.dart
+---
+class DioConfig {
+
+  // สร้างตัวแปรเก็บ token
+  static late String _token;
+
+  // ฟังก์ชันในการดึง token จาก shared preference
+  static _getToken() async {
+    _token = Utility.getSharedPreference('token');
+  }
+
+  // Create Dio Instance with Auth
+  static final Dio _dioWithAuth = Dio()
+    ..interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          await _getToken();
+          options.headers['Authorization'] = 'Bearer $_token';
+          options.headers['Accept'] = 'application/json';
+          options.headers['Content-Type'] = 'application/json';
+          options.baseUrl = baseURLAPI;
+          return handler.next(options);
+        },
+        onResponse: (response, handler) async {
+          return handler.next(response);
+        },
+        onError: (DioException e, handler) {
+          switch (e.response?.statusCode) {
+            case 400:
+              Utility().logger.e('Bad Request');
+              break;
+            case 401:
+              Utility().logger.e('Unauthorized');
+              break;
+            case 403:
+              Utility().logger.e('Forbidden');
+              break;
+            case 404:
+              Utility().logger.e('Not Found');
+              break;
+            case 500:
+              Utility().logger.e('Internal Server Error');
+              break;
+            default:
+              Utility().logger.e('Something went wrong');
+              break;
+          }
+          return handler.next(e);
+        },
+      ),
+    );
+
+  static Dio get dioWithAuth => _dioWithAuth;
+.
+.
+}
+
+Step 24: เพิ่มฟังก์ชัน getAllProducts ที่ไฟล์ rest_api.dart
+---
+class CallAPI {
+
+  final Dio _dioWithAuth = DioConfig.dioWithAuth;
+
+  // ---------------------------------------------------------------------------
+  // CRUD Product API Call Method
+  // ---------------------------------------------------------------------------
+
+  // Get All Product API -------------------------------------------------------
+  Future<List<ProductModel>> getAllProducts() async {
+    final response = await _dioWithAuth.get('products');
+    if (response.statusCode == 200) {
+      Utility().logger.d(response.data);
+      final List<ProductModel> products = productModelFromJson(
+        json.encode(response.data),
+      );
+      return products;
+    }
+    throw Exception('Failed to load products');
+  }
+  // ---------------------------------------------------------------------------
+ 
+}
+
+Step 25: สร้าง component "ImageNotFound" ที่ไฟล์ lib/components/image_not_found.dart
+---
+import 'package:flutter/material.dart';
+
+class ImageNotFound extends StatelessWidget {
+  const ImageNotFound({super.key});
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(
+    width: double.infinity,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.image_not_supported,
+          size: 50,
+          color: Colors.black45,
+        ),
+        SizedBox(height: 8),
+        Text(
+          'Image not found',
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Step 26: สร้าง component "ProductItem" ที่ไฟล์ lib/screens/products/components/product_item.dart
+---
+import 'package:flutter/material.dart';
+import 'package:flutter_node_store/components/image_not_found.dart';
+import 'package:flutter_node_store/models/product_model.dart';
+import 'package:flutter_node_store/utils/constants.dart';
+
+class ProductItem extends StatelessWidget {
+
+  const ProductItem({
+    required this.product,
+    this.onTap,
+    this.isGrid,
+    Key? key,
+  }): super(key: key);
+
+  final ProductModel product;
+  final VoidCallback? onTap;
+  final bool? isGrid;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+      ),
+      onPressed: onTap, 
+      child: LayoutBuilder(
+        builder: (context, constraint) => Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Column(
+            children: [
+              _buildImage(constraint.maxHeight),
+              _buildInfo()
+            ],
+          ),
+        ),
+      )
+    );
+  }
+
+  // _buildImage Widget
+  Stack _buildImage(double maxHeight){
+    
+    // Check list or grid view
+    // Case of list view
+    var height = maxHeight * 0.70;
+
+    // Case of grid view
+    if(isGrid != null && isGrid == true){
+      height = maxHeight * 0.48;
+    }
+
+    final image = product.image;
+
+    return Stack(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: height,
+          child: image != null && image.isNotEmpty ? _image(image) : const ImageNotFound(),
+        )
+      ],
+    );
+
+  }
+
+  // _image Widget
+  Container _image(String image){
+    String imageUrl;
+    if(image.contains('://')){
+      imageUrl = image;
+    }else{
+      imageUrl = '$baseURLImage$image';
+    }
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(5),
+          topRight: Radius.circular(5),
+        ),
+        image: DecorationImage(
+          image: NetworkImage(imageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  // _buildInfo Widget
+  Expanded _buildInfo() => Expanded(
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            product.name ?? '',
+            style: (isGrid ?? false) 
+            ? const TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.normal
+            ) : const TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: (){},
+                child: Text(
+                  '฿${product.price}',
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold
+                  ),
+                )
+              ),
+              Text(
+                '${product.stock} ชิ้น',
+                style: const TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.indigo
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    )
+  );
+
+
+}
+
+Step 26: อัพเดทไฟล์ home_screen.dart ในส่วนของ gridview และ listview เพื่อ return "ProductItem" ลงไป
+---
+// _gridView Widget -----------------------------------------------------------
+  Widget _gridView(List<ProductModel> products) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2 // จำนวนคอลัมน์
+          ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ProductItem(
+            isGrid: true,
+            product: products[index],
+            onTap: () {},
+          ),
+        );
+      },
+    );
+  }
+  // ---------------------------------------------------------------------------
+
+  // _listView Widget -----------------------------------------------------------
+  Widget _listView(List<ProductModel> products) {
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 8.0, right: 8.0),
+          child: SizedBox(
+            height: 350,
+            child: ProductItem(
+              product: products[index],
+              onTap: () {},
+            ),
+          ),
+        );
+      },
+    );
+  }
+  // ---------------------------------------------------------------------------
+
+Step 27: อัพเดทไฟล์ home_screen.dart ในส่วนของ body ทำการเรียก FutureBuilder เพื่อแสดงผลข้อมูลจาก API
+---
+body: FutureBuilder(
+        future: CallAPI().getAllProducts(),
+        builder: (context, AsyncSnapshot snapshot) {
+          // กรณีที่มี error
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('มีข้อผิดพลาด โปรดลองใหม่อีกครั้ง'),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            // กรณีที่โหลดข้อมูลสำเร็จ
+            List<ProductModel> products = snapshot.data;
+            return _isGridView ? _gridView(products) : _listView(products);
+          } else {
+            // กรณีที่กำลังโหลดข้อมูล
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+
+-------------------------------------------------------
+✈ DAY 5
+-------------------------------------------------------
+Section 8: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API (ต่อ)
+Section 9: จัดการ State ด้วย Provider
+Section 10: การทำแอพให้รองรับหลายภาษา
+Section 11: จัดการ State และ Route ด้วย GetX
+-------------------------------------------------------
+Section 8: Workshop CRUD ข้อมูลสินค้าจาก NodeJS API (ต่อ)
+
+Step 1: ติดตั้ง package (lib) สำหรับการ upload / crop file ภาพและ http_parser
+---
+  # http parser
+  http_parser: ^4.0.2
+
+  # Image Picker
+  image_picker: ^1.0.1
+
+  # Image Cropper
+  image_cropper: ^5.0.0 
+
+Step 2: config android / ios
+---
+
+สำหรับ image_picker
+----
+Android - No configuration required
+iOS config at <project root>/ios/Runner/Info.plist
+---	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to demonstrate image picker plugin</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to demonstrate image picker plugin</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to capture audio for image picker plugin</string>
+---
+
+สำหรับ image_cropper
+---
+Android Add UCropActivity into your AndroidManifest.xml
+---
+<activity
+    android:name="com.yalantis.ucrop.UCropActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+---
+
+iOS - No configuration required
+
+Step 3: อัพเดท rest_api.dart เพิ่มส่วนการ Create Product API Method
+---
+  // Create Product API Method -------------------------------------------------
+  Future<String> addProductAPI(ProductModel product, {File? imageFile}) async {
+    FormData data = FormData.fromMap({
+      'name': product.name,
+      'description': product.description,
+      'barcode': product.barcode,
+      'stock': product.stock,
+      'price': product.price,
+      'category_id': product.categoryId,
+      'user_id': product.userId,
+      'status_id': product.statusId,
+      if (imageFile != null)
+        'photo': await MultipartFile.fromFile(
+          imageFile.path,
+          contentType: MediaType('image', 'jpg'),
+        ),
+    });
+
+    final response = await _dioWithAuth.post('products', data: data);
+    if (response.statusCode == 200) {
+      Utility().logger.d(response.data);
+      return jsonEncode(response.data);
+    }
+    throw Exception('Failed to create product');
+  }
+  // ---------------------------------------------------------------------------
+
+Step 4: สร้างไฟล์ product_add.dart สำหรับเพิ่มสินค้าที่ lib/screens/products/product_add.dart
+---
+class AppRouter {
+.
+static const String productAdd = 'productAdd';
+.
+static get routes => {
+.
+productAdd: (context) => const ProductAddScreen(),
+};
+
+Step 5: เพิ่มลิงก์ Navigate จากหน้า home_screen.dart ไปยัง product_add.dart
+---
+actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, AppRouter.productAdd);
+            },
+            icon: const Icon(Icons.add),
+          )
+        ],
+
+Step 6: อัพเดทเพิ่มฟอร์มหน้า product_add.dart
+---
+
+-------------------------------------------------------
+✈ DAY 6
+-------------------------------------------------------
+9: จัดการ State ด้วย Provider
+10: การทำแอพให้รองรับหลายภาษา
+11: จัดการ State และ Route ด้วย GetX
+-------------------------------------------------------
+🔮 9: จัดการ State ด้วย Provider
+
+
+
+
+

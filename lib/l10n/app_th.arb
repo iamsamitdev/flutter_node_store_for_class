@@ -1,0 +1,16 @@
+{
+    "hello": "สวัสดี, สบายดีมั้ย",
+    "menu_home": "หน้าหลัก",
+    "menu_about": "เกี่ยวกับเรา",
+    "menu_contact": "ติดต่อ",
+    "menu_report": "รายงาน",
+    "menu_notification": "แจ้งเตือน",
+    "menu_info": "ข้อมูล",
+    "menu_account": "บัญชี",
+    "menu_changepass": "เปลี่ยนรหัสผ่าน",
+    "menu_changelang": "เปลี่ยนภาษา",
+    "menu_setting": "ตั้งค่า",
+    "menu_profile": "โปรไฟล์",
+    "menu_logout": "ออกจากระบบ",
+    "label_chooselang": "เลือกภาษา"
+}
