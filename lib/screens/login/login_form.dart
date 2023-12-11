@@ -17,8 +17,8 @@ class LoginForm extends StatelessWidget {
   final _formKeyLogin = GlobalKey<FormState>();
 
   // สร้าง TextEditingController
-  final _emailController = TextEditingController(text: 'samit@email.com');
-  final _passwordController = TextEditingController(text: '123456');
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +37,9 @@ class LoginForm extends StatelessWidget {
             height: 30,
           ),
           Form(
-              key: _formKeyLogin,
-              child: Column(children: [
+            key: _formKeyLogin,
+            child: Column(
+              children: [
                 customTextField(
                   controller: _emailController,
                   hintText: "Email",
@@ -90,61 +91,65 @@ class LoginForm extends StatelessWidget {
                   height: 10,
                 ),
                 RoundedButton(
-                    label: "LOGIN",
-                    onPressed: () async {
+                  label: "LOGIN",
+                  onPressed: () async {
+                    // ตรวจสอบข้อมูลฟอร์ม
+                    if (_formKeyLogin.currentState!.validate()) {
+                      // ถ้าข้อมูลผ่านการตรวจสอบ ให้ทำการบันทึกข้อมูล
+                      _formKeyLogin.currentState!.save();
 
-                      // ตรวจสอบข้อมูลฟอร์ม
-                      if (_formKeyLogin.currentState!.validate()) {
+                      // แสดงข้อมูลที่บันทึกใน Console
+                      // print("Email: ${_emailController.text}");
+                      // print("Password: ${_passwordController.text}");
 
-                        // ถ้าข้อมูลผ่านการตรวจสอบ ให้ทำการบันทึกข้อมูล
-                        _formKeyLogin.currentState!.save();
-                        
-                        // แสดงข้อมูลที่บันทึกใน Console
-                        // print("Email: ${_emailController.text}");
-                        // print("Password: ${_passwordController.text}");
+                      // ส่งข้อมูลไปยัง API เพื่อทำการตรวจสอบ
+                      var response = await CallAPI().loginAPI({
+                        "email": _emailController.text,
+                        "password": _passwordController.text
+                      });
 
-                        // ส่งข้อมูลไปยัง API เพื่อทำการตรวจสอบ
-                        var response = await CallAPI().loginAPI(
-                          {
-                            "email": _emailController.text,
-                            "password": _passwordController.text
-                          }
-                        );
+                      // ตรวจสอบค่าที่ได้จาก API
+                      var body = jsonDecode(response);
 
-                        // ตรวจสอบค่าที่ได้จาก API
-                        var body = jsonDecode(response);
+                      // Utility().logger.i(body);
 
-                        // Utility().logger.i(body);
+                      if (body["message"] == "No Network Connection") {
+                        // แจ้งเตือนว่าไม่มีการเชื่อมต่อ Internet
+                        Utility.showAlertDialog(
+                            context, '', '${body["message"]}');
+                      } else {
+                        if (body["status"] == "ok") {
+                          // แจ้งเตือนว่าเข้าสู่ระบบสำเร็จ
+                          Utility.showAlertDialog(
+                              context, body["status"], '${body["message"]}');
 
-                        if (body["message"] == "No Network Connection") {
-                          // แจ้งเตือนว่าไม่มีการเชื่อมต่อ Internet
-                          Utility.showAlertDialog(context, '', '${body["message"]}');
+                          // บันทึกข้อมูลลงในตัวแปร SharedPreferences
+                          await Utility.setSharedPreference(
+                              'loginStatus', true);
+                          await Utility.setSharedPreference(
+                              'token', body["token"]);
+                          await Utility.setSharedPreference(
+                              'firstName', body["user"]["firstname"]);
+                          await Utility.setSharedPreference(
+                              'lastName', body["user"]["lastname"]);
+                          await Utility.setSharedPreference(
+                              'email', body["user"]["email"]);
+
+                          // ส่งไปหน้า Dashboard
+                          Navigator.pushReplacementNamed(
+                              context, AppRouter.dashboard);
                         } else {
-                          if (body["status"] == "ok") {
-                            
-                            // แจ้งเตือนว่าเข้าสู่ระบบสำเร็จ
-                            Utility.showAlertDialog(context, body["status"], '${body["message"]}');
-
-                            // บันทึกข้อมูลลงในตัวแปร SharedPreferences
-                            await Utility.setSharedPreference('loginStatus', true);
-                            await Utility.setSharedPreference('token', body["token"]);
-                            await Utility.setSharedPreference('firstName', body["user"]["firstname"]);
-                            await Utility.setSharedPreference('lastName', body["user"]["lastname"]);
-                            await Utility.setSharedPreference('email', body["user"]["email"]);
-
-                            // ส่งไปหน้า Dashboard
-                            Navigator.pushReplacementNamed(context, AppRouter.dashboard);
-
-                          }else{
-                            // แจ้งเตือนว่าเข้าสู่ระบบไม่สำเร็จ
-                            Utility.showAlertDialog(context, body["status"], '${body["message"]}');
-                          }
+                          // แจ้งเตือนว่าเข้าสู่ระบบไม่สำเร็จ
+                          Utility.showAlertDialog(
+                              context, body["status"], '${body["message"]}');
                         }
-
                       }
-
-                    })
-              ])),
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
           const SizedBox(
             height: 10,
           ),

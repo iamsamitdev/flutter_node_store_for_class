@@ -1,4 +1,4 @@
-package com.itgenius.flutter_node_store
+package com.itgenius.genstore
 
 import io.flutter.embedding.android.FlutterActivity
 
